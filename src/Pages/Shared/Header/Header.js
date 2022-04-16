@@ -1,9 +1,16 @@
+import { signOut } from "firebase/auth";
 import React from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
+import auth from "../../../firebase.init";
 import logo from "../../../images/logo.png";
 
 const Header = () => {
+  const [user] = useAuthState(auth);
+  const handleSignOut = () => {
+    signOut(auth);
+  };
   return (
     <>
       <Navbar
@@ -19,9 +26,13 @@ const Header = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto text-white">
-              <Nav.Link href="home#services">Services</Nav.Link>
-              <Nav.Link href="home#experts">Experts</Nav.Link>
+            <Nav className="me-auto text-white font-bold">
+              <Nav.Link href="home#services" className="text-white font-bolder">
+                Services
+              </Nav.Link>
+              <Nav.Link href="home#experts" className="text-white font-bolder">
+                Experts
+              </Nav.Link>
               <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
@@ -37,12 +48,30 @@ const Header = () => {
               </NavDropdown>
             </Nav>
             <Nav>
-              <Nav.Link as={Link} to="/about">
+              <Nav.Link
+                as={Link}
+                to="/about"
+                className="text-white font-bolder"
+              >
                 About
               </Nav.Link>
-              <Nav.Link as={Link} to="/login" href="#memes">
-                Login
-              </Nav.Link>
+              {user ? (
+                <button
+                  onClick={handleSignOut}
+                  className="btn btn-link text-white text-decoration-none"
+                >
+                  Sign-Out
+                </button>
+              ) : (
+                <Nav.Link
+                  as={Link}
+                  to="/login"
+                  href="#memes"
+                  className="text-white font-bolder"
+                >
+                  Login
+                </Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
