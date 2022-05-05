@@ -71,6 +71,13 @@ const Header = () => {
                   >
                     Manage
                   </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/orders"
+                    className="text-white font-bolder"
+                  >
+                    Orders
+                  </Nav.Link>
                 </>
               )}
               {user ? (

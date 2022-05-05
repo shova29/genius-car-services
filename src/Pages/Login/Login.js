@@ -10,8 +10,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
 import Loading from "../Shared/Loading/Loading";
 import SocialLogin from "./SocialLogin/SocialLogin";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import useToken from "../../hooks/useToken";
 
 const Login = () => {
   const emailRef = useRef("");
@@ -24,24 +26,28 @@ const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+  const [token] = useToken(user);
 
   if (loading || sending) {
     return <Loading></Loading>;
   }
 
-  if (user) {
+  if (token) {
+    // navigate(from, { replace: true });
     navigate(from, { replace: true });
   }
 
   if (error) {
     errorElement = <p className="text-danger">Error: {error?.message}</p>;
   }
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    signInWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(email, password);
   };
+
   const navigateRegister = (event) => {
     navigate("/register");
   };
@@ -101,7 +107,6 @@ const Login = () => {
         </button>
       </p>
       <SocialLogin></SocialLogin>
-      <ToastContainer />
     </div>
   );
 };
